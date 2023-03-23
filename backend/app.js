@@ -27,7 +27,6 @@ app.get("/", async (req, res) => {
 
 app.post("/", async (req, res) => {
   try {
-    console.log(req.body);
     const data = await Test.create(req.body);
     res.status(201).json({ success: true, resp: data });
   } catch (error) {
@@ -39,6 +38,16 @@ app.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const data = await Test.findByIdAndRemove({ _id: id });
+    res.status(200).json({ success: true, resp: data });
+  } catch (error) {
+    res.status(404).json({ success: false });
+  }
+});
+
+app.patch("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = await Test.findByIdAndUpdate(id, req.body);
     res.status(200).json({ success: true, resp: data });
   } catch (error) {
     res.status(404).json({ success: false });

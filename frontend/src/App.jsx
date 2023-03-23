@@ -1,20 +1,22 @@
 import { useSelector, useDispatch } from "react-redux";
 import {
   addToList,
+  editItem,
   removeItem,
   searchTasks,
   setValue,
-  toggleBtn,
+  toggleEdit,
 } from "./features/tasksSlice";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useEffect, useState } from "react";
 function App() {
-  const { value, taskList } = useSelector((store) => store.tasks);
+  const { value, taskList, isEdit, editId } = useSelector(
+    (store) => store.tasks
+  );
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(searchTasks());
   }, []);
-  // useEffect(() => {}, [taskList]);
   return (
     <div className="bg-orange-200">
       <div className="text-center p-12 min-h-screen max-w-7xl mx-auto ">
@@ -37,10 +39,13 @@ function App() {
             className="py-2 px-5 font-bold border sm:mx-4 rounded-md bg-red-300 text-xl"
             onClick={() => {
               if (!value) return;
-              dispatch(addToList(value));
+              !isEdit
+                ? dispatch(addToList(value))
+                : dispatch(editItem({editId, value}));
+                
             }}
           >
-            {/* {isEdit.flag && task ? "Edit" : "Add"} */}Add
+            {isEdit ? "Edit" : "Add"}
           </button>
         </form>
         <div
@@ -53,9 +58,8 @@ function App() {
               Your Tasks
             </h2>
           )}
-          {taskList.map((item, index) => {
+          {taskList.map((item) => {
             const { task, _id: id } = item;
-            console.log(id);
             return (
               <div
                 key={id}
@@ -65,7 +69,10 @@ function App() {
                   {task}
                 </h3>
                 <div className="flex-shrink-0">
-                  <button className="mx-3 " onClick={() => editItem(index)}>
+                  <button
+                    className="mx-3 "
+                    onClick={() => dispatch(toggleEdit({ id, task }))}
+                  >
                     <FaEdit />
                   </button>
                   <button

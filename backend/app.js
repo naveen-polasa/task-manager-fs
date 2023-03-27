@@ -5,9 +5,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 const connectDB = require("./db/connect");
-const router = require("./router/tasks");
+const authRouter = require("./router/auth");
+const tasksRouter = require("./router/tasks");
 
-app.use(router);
+app.use(authRouter);
+app.use(tasksRouter);
 
 const connect = async () => {
   try {

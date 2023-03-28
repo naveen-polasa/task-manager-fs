@@ -9,7 +9,7 @@ const Register = () => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const formData = Object.fromEntries(data);
-    console.log(formData);
+
     dispatch(registerThunk(formData));
   };
   return (
@@ -24,18 +24,21 @@ const Register = () => {
           name="name"
           className="w-[80%] md:w-[33rem]  border-2 h-12 px-3 rounded-md border-red-300"
           placeholder="Enter Your Name"
+          required
         />
         <input
           type="text"
           name="email"
           className="w-[80%] md:w-[33rem]  border-2 h-12 px-3 rounded-md border-red-300"
           placeholder="Enter Your Email"
+          required
         />
         <input
           type="password"
           name="password"
           className="w-[80%] md:w-[33rem]  border-2 h-12 px-3 rounded-md  border-red-300"
           placeholder="Enter Your password"
+          required
         />
         <p>{userCreated && "Registration Successfull"}</p>
         <button

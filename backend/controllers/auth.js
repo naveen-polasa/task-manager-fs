@@ -5,13 +5,14 @@ const registerUser = async (req, res) => {
     const user = await User.create(req.body);
     res.status(201).json({ success: true });
   } catch (error) {
-    res.status(404).json({ success: false });
+    res.status(404).json({ msg: error });
   }
 };
 
 const loginUser = async (req, res) => {
   try {
-    console.log(req.body);
+    const { email, password } = req.body;
+    if (!email || !password) throw new Error("empty values");
     const user = await User.findOne(req.body);
     if (!user) {
       throw new Error("no user found");
@@ -19,7 +20,8 @@ const loginUser = async (req, res) => {
     console.log(user);
     res.status(200).json({ success: true });
   } catch (error) {
-    res.status(404).json({ success: false });
+    console.log(error);
+    res.status(404).json({ msg: error.message });
   }
 };
 

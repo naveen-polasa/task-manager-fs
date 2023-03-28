@@ -23,16 +23,16 @@ const Login = () => {
           name="email"
           className="w-[80%] md:w-[33rem]  border-2 h-12 px-3 rounded-md border-red-300"
           placeholder="Enter your Email"
+          required
         />
         <input
           type="password"
           name="password"
           className="w-[80%] md:w-[33rem]  border-2 h-12 px-3 rounded-md  border-red-300"
           placeholder="Enter your password"
+          required
         />
-        <p>
-          {isLoggedIn && "User Logged In" }
-        </p>
+        <p>{isLoggedIn && "User Logged In"}</p>
         <button
           type="submit"
           className="py-2 px-5 font-bold border w-[80%] md:w-[33rem] rounded-md bg-red-300 text-xl"

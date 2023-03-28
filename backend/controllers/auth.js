@@ -3,6 +3,7 @@ const User = require("../models/user");
 const registerUser = async (req, res) => {
   try {
     const user = await User.create(req.body);
+
     res.status(201).json({ success: true });
   } catch (error) {
     res.status(404).json({ msg: error });
@@ -18,7 +19,9 @@ const loginUser = async (req, res) => {
       throw new Error("no user found");
     }
     console.log(user);
-    res.status(200).json({ success: true });
+    const token = await user.createJWT();
+    console.log(token);
+    res.status(200).json({ user: { name: user.name }, token });
   } catch (error) {
     console.log(error);
     res.status(404).json({ msg: error.message });

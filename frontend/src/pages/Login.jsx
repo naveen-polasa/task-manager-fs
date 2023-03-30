@@ -8,7 +8,6 @@ const Login = () => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const formData = Object.fromEntries(data);
-    console.log(formData);
     dispatch(loginThunk(formData));
   };
   return (

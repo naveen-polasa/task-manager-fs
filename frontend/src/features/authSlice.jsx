@@ -5,7 +5,10 @@ export const loginThunk = createAsyncThunk(
   "loginThunk",
   async (user, thunkAPI) => {
     try {
-      const { data } = await axios.post("http://localhost:5555/login", user);
+      const { data } = await axios.post(
+        "http://localhost:5555/api/auth/login",
+        user
+      );
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -17,7 +20,10 @@ export const registerThunk = createAsyncThunk(
   "registerThunk",
   async (user, thunkAPI) => {
     try {
-      const { data } = await axios.post("http://localhost:5555/register", user);
+      const { data } = await axios.post(
+        "http://localhost:5555/api/auth/register",
+        user
+      );
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -28,6 +34,7 @@ export const registerThunk = createAsyncThunk(
 const initialState = {
   userCreated: null,
   isLoggedIn: null,
+  authToken: null,
 };
 
 const authSlice = createSlice({
@@ -45,7 +52,8 @@ const authSlice = createSlice({
       .addCase(loginThunk.rejected, (state) => {
         state.isLoggedIn = false;
       })
-      .addCase(loginThunk.fulfilled, (state) => {
+      .addCase(loginThunk.fulfilled, (state, { payload: { token } }) => {
+        state.authToken = token;
         state.isLoggedIn = true;
       });
   },

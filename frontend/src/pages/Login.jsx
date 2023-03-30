@@ -1,15 +1,25 @@
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { loginThunk } from "../features/authSlice";
 
 const Login = () => {
-  const { isLoggedIn } = useSelector((store) => store.auth);
+  const { isLoggedIn, authToken } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const formData = Object.fromEntries(data);
     dispatch(loginThunk(formData));
   };
+
+  useEffect(() => {
+    if (isLoggedIn && authToken) {
+      return navigate("/tasks");
+    }
+  }, []);
+
   return (
     <div className="max-w-7xl mx-auto min-h-screen bg-orange-200 ">
       <form

@@ -2,6 +2,7 @@ const user = require("../models/user");
 const jwt = require("jsonwebtoken");
 
 const auth = (req, res, next) => {
+    console.log(req.headers)
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     throw new Error("no header provided");

@@ -9,9 +9,14 @@ const initialState = {
 
 export const searchTasks = createAsyncThunk(
   "tasksFind",
-  async (_, thunkAPI) => {
+  async (authToken, thunkAPI) => {
     try {
-      const { data } = await axios("http://localhost:5555/");
+      const { data } = await axios("http://localhost:5555/api/tasks", {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      console.log(data);
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -21,13 +26,23 @@ export const searchTasks = createAsyncThunk(
 
 export const addToList = createAsyncThunk(
   "postData",
-  async (value, thunkAPI) => {
+  async ({ value, authToken }, thunkAPI) => {
     if (!value) return;
     try {
-      const { data } = await axios.post("http://localhost:5555/", {
-        task: value,
-      });
-      return data.resp;
+      const {
+        data: { data },
+      } = await axios.post(
+        "http://localhost:5555/api/tasks",
+        {
+          task: value,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+      return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -36,10 +51,16 @@ export const addToList = createAsyncThunk(
 
 export const removeItem = createAsyncThunk(
   "deleteItem",
-  async (id, thunkAPI) => {
+  async ({ id, authToken }, thunkAPI) => {
     try {
-      const { data } = await axios.delete(`http://localhost:5555/${id}`);
-      return data.resp;
+      const {
+        data: { data },
+      } = await axios.delete(`http://localhost:5555/api/tasks/${id}`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -48,12 +69,20 @@ export const removeItem = createAsyncThunk(
 
 export const editItem = createAsyncThunk(
   "editItem",
-  async ({ editId, value }) => {
+  async ({ editId, value, authToken }) => {
     try {
-      const { data } = await axios.patch(`http://localhost:5555/${editId}`, {
-        task: value,
-      });
-      return data.resp;
+      const { data:{data} } = await axios.patch(
+        `http://localhost:5555/api/tasks/${editId}`,
+        {
+          task: value,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+      return data;
     } catch (error) {
       console.log(error);
     }
@@ -86,6 +115,7 @@ const tasksSlice = createSlice({
       .addCase(addToList.pending, (state) => {})
       .addCase(addToList.fulfilled, (state, { payload }) => {
         state.value = "";
+        console.log(payload);
         state.taskList = [...state.taskList, payload];
       })
       .addCase(addToList.rejected, (state, { payload }) => {

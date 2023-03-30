@@ -9,14 +9,24 @@ import {
 } from "./features/tasksSlice";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 function App() {
   const { value, taskList, isEdit, editId } = useSelector(
     (store) => store.tasks
   );
+  const { isLoggedIn, authToken } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   useEffect(() => {
-    dispatch(searchTasks());
+    dispatch(searchTasks(authToken));
   }, []);
+
+  useEffect(() => {
+    if (!isLoggedIn || !authToken) {
+      return navigate("/login");
+    }
+  }, []);
+  console.log(taskList);
   return (
     <div className="bg-orange-200">
       <div className="text-center p-12 min-h-screen max-w-7xl mx-auto ">
@@ -40,9 +50,8 @@ function App() {
             onClick={() => {
               if (!value) return;
               !isEdit
-                ? dispatch(addToList(value))
-                : dispatch(editItem({editId, value}));
-                
+                ? dispatch(addToList({ value, authToken }))
+                : dispatch(editItem({ editId, value, authToken }));
             }}
           >
             {isEdit ? "Edit" : "Add"}
@@ -58,7 +67,7 @@ function App() {
               Your Tasks
             </h2>
           )}
-          {taskList.map((item) => {
+          {taskList?.map((item) => {
             const { task, _id: id } = item;
             return (
               <div
@@ -78,7 +87,7 @@ function App() {
                   <button
                     className="mx-3 text-red-600 "
                     onClick={() => {
-                      dispatch(removeItem(id));
+                      dispatch(removeItem({ id, authToken }));
                     }}
                   >
                     <FaTrash />

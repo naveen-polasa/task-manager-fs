@@ -33,8 +33,8 @@ export const registerThunk = createAsyncThunk(
 
 const initialState = {
   userCreated: null,
-  isLoggedIn: null,
-  authToken: null,
+  isLoggedIn: JSON.parse(localStorage.getItem("token")) ? true : false,
+  authToken: "" || JSON.parse(localStorage.getItem("token")),
 };
 
 const authSlice = createSlice({
@@ -54,6 +54,7 @@ const authSlice = createSlice({
       })
       .addCase(loginThunk.fulfilled, (state, { payload: { token } }) => {
         state.authToken = token;
+        localStorage.setItem("token", JSON.stringify(token));
         state.isLoggedIn = true;
       });
   },

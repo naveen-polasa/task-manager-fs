@@ -14,9 +14,15 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) throw new Error("empty values");
-    const user = await User.findOne(req.body);
+    const user = await User.findOne({ email });
+    console.log(user);
     if (!user) {
       throw new Error("no user found");
+    }
+
+    const isCorrect = await user.checkPasswords(password);
+    if (!isCorrect) {
+      throw new Error("Invalid Credentials");
     }
     const token = await user.createJWT();
     res.status(200).json({ user: { name: user.name }, token });

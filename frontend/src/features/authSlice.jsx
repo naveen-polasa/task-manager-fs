@@ -9,9 +9,10 @@ export const loginThunk = createAsyncThunk(
         "http://localhost:5555/api/auth/login",
         user
       );
+      console.log(data);
       return data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -26,7 +27,7 @@ export const registerThunk = createAsyncThunk(
       );
       return data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -35,6 +36,7 @@ const initialState = {
   userCreated: null,
   isLoggedIn: JSON.parse(localStorage.getItem("token")) ? true : false,
   authToken: JSON.parse(localStorage.getItem("token")) || "",
+  errorMsg: "",
 };
 
 const authSlice = createSlice({
@@ -49,13 +51,19 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(registerThunk.rejected, (state) => {
+      .addCase(registerThunk.rejected, (state, { payload }) => {
+        console.log(payload);
         state.userCreated = false;
       })
-      .addCase(registerThunk.fulfilled, (state) => {
+      .addCase(registerThunk.fulfilled, (state, { payload: { token } }) => {
         state.userCreated = true;
+        state.authToken = token;
+        localStorage.setItem("token", JSON.stringify(token));
+        state.isLoggedIn = true;
       })
-      .addCase(loginThunk.rejected, (state) => {
+      .addCase(loginThunk.rejected, (state, { payload: { response } }) => {
+        state.errorMsg = response.data.msg;
+        console.log(state.errorMsg);
         state.isLoggedIn = false;
       })
       .addCase(loginThunk.fulfilled, (state, { payload: { token } }) => {

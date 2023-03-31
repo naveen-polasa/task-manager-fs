@@ -77,7 +77,7 @@ function App() {
           </button>
         </form>
         <div
-          className={`py-3 px-6 my-8 sm:w-[27rem] mx-auto rounded-lg ${
+          className={`py-3 px-6 my-8 sm:w-[33rem] mx-auto rounded-lg ${
             taskList.length > 0 && "border-2 border-red-400 bg-lime-100"
           }`}
         >
@@ -85,6 +85,11 @@ function App() {
             <div className="flex items-center justify-center h-44">
               <span className="animate-spin inline-block  h-12 w-12  rounded-full text-white border-4 border-red-300  border-t-red-500"></span>
             </div>
+          )}
+          {!taskList.length && !isLoading && (
+            <h1 className="font-mono sm:text-xl">
+              You don't have any Tasks Try adding One...
+            </h1>
           )}
           {taskList.length > 0 && (
             <h2 className="font-mono text-xl mb-4 border-2 inline-block py-1 px-3 border-red-400 rounded-lg bg-yellow-50">

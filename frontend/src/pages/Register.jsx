@@ -16,6 +16,8 @@ const Register = () => {
     const data = new FormData(e.currentTarget);
     const formData = Object.fromEntries(data);
     dispatch(registerThunk(formData));
+    dispatch(searchTasks(authToken));
+    return navigate("/tasks");
   };
 
   useEffect(() => {

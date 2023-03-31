@@ -8,17 +8,21 @@ import {
   toggleEdit,
 } from "./features/tasksSlice";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { logoutUser } from "./features/authSlice";
+
 function App() {
-  const { value, taskList, isEdit, editId } = useSelector(
+  const { value, taskList, isEdit, editId, isLoading, username } = useSelector(
     (store) => store.tasks
   );
   const { isLoggedIn, authToken } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   useEffect(() => {
-    dispatch(searchTasks(authToken));
+    authToken && dispatch(searchTasks(authToken));
   }, []);
 
   useEffect(() => {
@@ -26,10 +30,25 @@ function App() {
       return navigate("/login");
     }
   }, []);
-  console.log(taskList);
+
   return (
     <div className="bg-orange-200">
       <div className="text-center p-12 min-h-screen max-w-7xl mx-auto ">
+        <div className="flex items-center justify-end text-xl">
+          {isLoggedIn ? (
+            <p className="capitalize font-mono">Hi {username}</p>
+          ) : null}
+          <button
+            className="flex items-center gap-x-2 mx-3 p-0.5 px-2 border-2 rounded-xl bg-red-300 border-red-400 hover:bg-orange-300 hover:scale-105 duration-300"
+            onClick={() => {
+              dispatch(logoutUser());
+              return navigate("/login");
+            }}
+          >
+            <p>Log Out</p>
+            <FiLogOut />
+          </button>
+        </div>
         <h1 className="font-semibold text-3xl mt-2 mb-7 pb-2 inline-block border-b-2 border-lime-300">
           Task Manager
         </h1>
@@ -46,7 +65,7 @@ function App() {
           />
           <button
             type="submit"
-            className="py-2 px-5 font-bold border sm:mx-4 rounded-md bg-red-300 text-xl"
+            className="py-2 px-5 font-bold border sm:ml-4 rounded-md bg-red-300 text-xl"
             onClick={() => {
               if (!value) return;
               !isEdit
@@ -62,6 +81,11 @@ function App() {
             taskList.length > 0 && "border-2 border-red-400 bg-lime-100"
           }`}
         >
+          {isLoading && (
+            <div className="flex items-center justify-center h-44">
+              <span className="animate-spin inline-block  h-12 w-12  rounded-full text-white border-4 border-red-300  border-t-red-500"></span>
+            </div>
+          )}
           {taskList.length > 0 && (
             <h2 className="font-mono text-xl mb-4 border-2 inline-block py-1 px-3 border-red-400 rounded-lg bg-yellow-50">
               Your Tasks

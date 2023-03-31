@@ -34,13 +34,19 @@ export const registerThunk = createAsyncThunk(
 const initialState = {
   userCreated: null,
   isLoggedIn: JSON.parse(localStorage.getItem("token")) ? true : false,
-  authToken: "" || JSON.parse(localStorage.getItem("token")),
+  authToken: JSON.parse(localStorage.getItem("token")) || "",
 };
 
 const authSlice = createSlice({
   name: "authSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    logoutUser: (state) => {
+      state.isLoggedIn = false;
+      state.authToken = "";
+      localStorage.removeItem("token");
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(registerThunk.rejected, (state) => {
@@ -59,5 +65,7 @@ const authSlice = createSlice({
       });
   },
 });
+
+export const { logoutUser } = authSlice.actions;
 
 export default authSlice.reducer;

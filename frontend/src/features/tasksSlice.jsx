@@ -3,8 +3,11 @@ import axios from "axios";
 const initialState = {
   value: "",
   taskList: [],
+  username: "",
   isEdit: false,
   editId: null,
+  isLoading: false,
+  isError: false,
 };
 
 export const searchTasks = createAsyncThunk(
@@ -16,7 +19,6 @@ export const searchTasks = createAsyncThunk(
           Authorization: `Bearer ${authToken}`,
         },
       });
-      console.log(data);
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -71,7 +73,9 @@ export const editItem = createAsyncThunk(
   "editItem",
   async ({ editId, value, authToken }) => {
     try {
-      const { data:{data} } = await axios.patch(
+      const {
+        data: { data },
+      } = await axios.patch(
         `http://localhost:5555/api/tasks/${editId}`,
         {
           task: value,
@@ -105,11 +109,20 @@ const tasksSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(searchTasks.pending, (state) => {})
-      .addCase(searchTasks.fulfilled, (state, { payload }) => {
-        state.taskList = payload;
+      .addCase(searchTasks.pending, (state) => {
+        state.isLoading = true;
       })
+      .addCase(
+        searchTasks.fulfilled,
+        (state, { payload: { username, tasks } }) => {
+          state.isLoading = false;
+          state.username = username;
+          state.taskList = tasks;
+        }
+      )
       .addCase(searchTasks.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.isError = true;
         console.log(payload);
       })
       .addCase(addToList.pending, (state) => {})

@@ -3,7 +3,6 @@ import axios from "axios";
 const initialState = {
   value: "",
   taskList: [],
-  username: "",
   isEdit: false,
   editId: null,
   isLoading: false,
@@ -112,14 +111,11 @@ const tasksSlice = createSlice({
       .addCase(searchTasks.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(
-        searchTasks.fulfilled,
-        (state, { payload: { username, tasks } }) => {
-          state.isLoading = false;
-          state.username = username;
-          state.taskList = tasks;
-        }
-      )
+      .addCase(searchTasks.fulfilled, (state, { payload: { tasks } }) => {
+        console.log(tasks);
+        state.isLoading = false;
+        state.taskList = tasks;
+      })
       .addCase(searchTasks.rejected, (state, { payload }) => {
         state.isLoading = false;
         state.isError = true;
@@ -128,7 +124,6 @@ const tasksSlice = createSlice({
       .addCase(addToList.pending, (state) => {})
       .addCase(addToList.fulfilled, (state, { payload }) => {
         state.value = "";
-        console.log(payload);
         state.taskList = [...state.taskList, payload];
       })
       .addCase(addToList.rejected, (state, { payload }) => {

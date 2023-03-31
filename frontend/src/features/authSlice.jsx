@@ -33,11 +33,10 @@ export const registerThunk = createAsyncThunk(
 );
 
 const initialState = {
-  userCreated: null,
   isLoggedIn: JSON.parse(localStorage.getItem("token")) ? true : false,
   authToken: JSON.parse(localStorage.getItem("token")) || "",
-  errorMsg: "",
   username: "user",
+  isError: false,
 };
 
 const authSlice = createSlice({
@@ -54,23 +53,24 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(registerThunk.rejected, (state, { payload }) => {
-        console.log(payload.response.data.msg);
-        state.userCreated = false;
+      .addCase(registerThunk.rejected, (state) => {
+        state.isError = true;
+        toast.error(
+          "Name & Password Should Be More Than 6 & Mail Should Be Unique"
+        );
       })
       .addCase(
         registerThunk.fulfilled,
         (state, { payload: { token, user } }) => {
+          toast.success("Registration Successful");
+          state.isError = false;
           state.username = user.name;
-          state.userCreated = true;
           state.authToken = token;
           localStorage.setItem("token", JSON.stringify(token));
           state.isLoggedIn = true;
         }
       )
       .addCase(loginThunk.rejected, (state, { payload: { response } }) => {
-        state.errorMsg = response.data.msg;
-        console.log(response.data.msg);
         toast.error(response.data.msg);
         state.isLoggedIn = false;
       })

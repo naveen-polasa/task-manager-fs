@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   addToList,
   editItem,
+  resetTasks,
   searchTasks,
   setValue,
 } from "./features/tasksSlice";
@@ -32,7 +33,7 @@ function App() {
   return (
     <div className="bg-orange-200">
       <div className="text-center p-12 min-h-screen max-w-7xl mx-auto ">
-        <div className="flex items-center justify-end text-xl">
+        <div className="flex items-center justify-end text-xl my-3">
           {isLoggedIn ? (
             <p className="capitalize font-mono">Hi {username}</p>
           ) : null}
@@ -40,6 +41,7 @@ function App() {
             className="flex items-center gap-x-2 mx-3 p-0.5 px-2 border-2 rounded-xl bg-red-300 border-red-400 hover:bg-orange-300 hover:scale-105 duration-300"
             onClick={() => {
               dispatch(logoutUser());
+              dispatch(resetTasks())
               return navigate("/login");
             }}
           >

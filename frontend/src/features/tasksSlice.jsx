@@ -107,6 +107,9 @@ const tasksSlice = createSlice({
       state.editId = id;
       if (!state.isEdit) state.value = "";
     },
+    resetTasks: (state) => {
+      state.taskList = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -160,6 +163,6 @@ const tasksSlice = createSlice({
   },
 });
 
-export const { setValue, toggleEdit } = tasksSlice.actions;
+export const { setValue, toggleEdit, resetTasks } = tasksSlice.actions;
 
 export default tasksSlice.reducer;

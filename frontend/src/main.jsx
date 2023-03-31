@@ -19,7 +19,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/login" element={<Login />} />
           <Route path="/tasks" element={<App />} />
         </Routes>
-        <ToastContainer position="top-center" autoClose={1000} />
+        <ToastContainer position="top-center" autoClose={1500} />
       </Router>
     </Provider>
   </React.StrictMode>

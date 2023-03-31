@@ -5,7 +5,7 @@ import { registerThunk } from "../features/authSlice";
 import { searchTasks } from "../features/tasksSlice";
 
 const Register = () => {
-  const { userCreated, isLoggedIn, authToken } = useSelector(
+  const { userCreated, isLoggedIn, authToken, isError } = useSelector(
     (store) => store.auth
   );
   const dispatch = useDispatch();
@@ -17,6 +17,7 @@ const Register = () => {
     const formData = Object.fromEntries(data);
     dispatch(registerThunk(formData));
     dispatch(searchTasks(authToken));
+    if (isError) return;
     setTimeout(() => {
       return navigate("/tasks");
     }, 700);
@@ -48,7 +49,7 @@ const Register = () => {
             required
           />
           <input
-            type="text"
+            type="email"
             name="email"
             className="w-[80%] md:w-[33rem]  border-2 h-12 px-3 rounded-md border-red-300"
             placeholder="Enter Your Email"

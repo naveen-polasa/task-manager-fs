@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-toastify";
 const initialState = {
   value: "",
   taskList: [],
@@ -104,6 +105,7 @@ const tasksSlice = createSlice({
       state.isEdit = !state.isEdit;
       state.value = task;
       state.editId = id;
+      if (!state.isEdit) state.value = "";
     },
   },
   extraReducers: (builder) => {
@@ -112,7 +114,6 @@ const tasksSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(searchTasks.fulfilled, (state, { payload: { tasks } }) => {
-        console.log(tasks);
         state.isLoading = false;
         state.taskList = tasks;
       })
@@ -125,6 +126,7 @@ const tasksSlice = createSlice({
       .addCase(addToList.fulfilled, (state, { payload }) => {
         state.value = "";
         state.taskList = [...state.taskList, payload];
+        toast.success("Task Added to List");
       })
       .addCase(addToList.rejected, (state, { payload }) => {
         console.log(payload);
@@ -134,6 +136,7 @@ const tasksSlice = createSlice({
         state.taskList = state.taskList.filter(
           (task) => task._id !== payload._id
         );
+        toast.success("Task Deleted Successfully");
       })
       .addCase(removeItem.rejected, (state, { payload }) => {
         console.log(payload);
@@ -149,6 +152,7 @@ const tasksSlice = createSlice({
         });
         state.isEdit = false;
         state.value = "";
+        toast.success("Task Edited Successfully");
       })
       .addCase(editItem.rejected, (state, { payload }) => {
         console.log(payload);

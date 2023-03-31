@@ -17,7 +17,7 @@ const loginUser = async (req, res) => {
     const user = await User.findOne({ email });
     console.log(user);
     if (!user) {
-      throw new Error("no user found");
+      throw new Error("No User Found");
     }
 
     const isCorrect = await user.checkPasswords(password);

@@ -6,15 +6,13 @@ import {
   setValue,
 } from "./features/tasksSlice";
 import { FiLogOut } from "react-icons/fi";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "./features/authSlice";
 import Tasks from "./components/Tasks";
 
 function App() {
-  const { value,  isEdit, editId } = useSelector(
-    (store) => store.tasks
-  );
+  const { value, isEdit, editId } = useSelector((store) => store.tasks);
   const { isLoggedIn, authToken, username } = useSelector(
     (store) => store.auth
   );
@@ -61,6 +59,7 @@ function App() {
             className="w-[80%] md:w-[33rem]  border-2 h-12 px-3 rounded-md mr-2 border-red-300"
             placeholder="Enter your task"
             value={value}
+            autoFocus={isEdit}
             onChange={(e) => dispatch(setValue(e.target.value))}
           />
           <button

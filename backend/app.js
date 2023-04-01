@@ -15,7 +15,7 @@ app.use("/api/tasks", userAuth, tasksRouter);
 const connect = async () => {
   try {
     connectDB(process.env.MONGO_URI);
-    app.listen(5555, () => {
+    app.listen(process.env.PORT || 5555, () => {
       console.log("started bro");
     });
   } catch (error) {

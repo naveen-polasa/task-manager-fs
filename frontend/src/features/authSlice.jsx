@@ -2,14 +2,13 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+const url = "https://task-manager-fs.onrender.com";
+
 export const loginThunk = createAsyncThunk(
   "loginThunk",
   async (user, thunkAPI) => {
     try {
-      const { data } = await axios.post(
-        "http://localhost:5555/api/auth/login",
-        user
-      );
+      const { data } = await axios.post(`${url}/api/auth/login`, user);
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -21,10 +20,7 @@ export const registerThunk = createAsyncThunk(
   "registerThunk",
   async (user, thunkAPI) => {
     try {
-      const { data } = await axios.post(
-        "http://localhost:5555/api/auth/register",
-        user
-      );
+      const { data } = await axios.post(`${url}/api/auth/register`, user);
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);

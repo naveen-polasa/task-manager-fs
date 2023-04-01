@@ -1,6 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
+
+const url = "https://task-manager-fs.onrender.com";
+
 const initialState = {
   value: "",
   taskList: [],
@@ -14,7 +17,7 @@ export const searchTasks = createAsyncThunk(
   "tasksFind",
   async (authToken, thunkAPI) => {
     try {
-      const { data } = await axios("http://localhost:5555/api/tasks", {
+      const { data } = await axios(`${url}/api/tasks`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -34,7 +37,7 @@ export const addToList = createAsyncThunk(
       const {
         data: { data },
       } = await axios.post(
-        "http://localhost:5555/api/tasks",
+        `${url}/api/tasks`,
         {
           task: value,
         },
@@ -57,11 +60,14 @@ export const removeItem = createAsyncThunk(
     try {
       const {
         data: { data },
-      } = await axios.delete(`http://localhost:5555/api/tasks/${id}`, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      } = await axios.delete(
+        `${url}/api/tasks/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -76,7 +82,7 @@ export const editItem = createAsyncThunk(
       const {
         data: { data },
       } = await axios.patch(
-        `http://localhost:5555/api/tasks/${editId}`,
+        `${url}/api/tasks/${editId}`,
         {
           task: value,
         },
